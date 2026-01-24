@@ -609,6 +609,8 @@ This project predicts age at death based on lifestyle factors (work hours, rest 
 - **PyBrain Neural Network** (ANN-based) for non-linear modeling
 - **Data scraping** from a GitHub repository
 - **Docker containerization** for model deployment
+- <img width="1000" height="500" alt="projectColumnDes" src="https://github.com/user-attachments/assets/e45ec724-f632-45e8-8813-c61c662eb8d6" />
+
 
 ## Project Structure
 

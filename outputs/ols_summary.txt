@@ -6,8 +6,8 @@ OLS REGRESSION MODEL SUMMARY
 Dep. Variable:                      y   R-squared:                       0.244
 Model:                            OLS   Adj. R-squared:                  0.242
 Method:                 Least Squares   F-statistic:                     132.3
-Date:                Sat, 24 Jan 2026   Prob (F-statistic):               0.00
-Time:                        16:50:12   Log-Likelihood:                -25984.
+Date:                Mon, 26 Jan 2026   Prob (F-statistic):               0.00
+Time:                        16:03:39   Log-Likelihood:                -25984.
 No. Observations:                7405   AIC:                         5.201e+04
 Df Residuals:                    7386   BIC:                         5.214e+04
 Df Model:                          18                                         

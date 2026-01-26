@@ -12,7 +12,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config import DATASET_URL
 
-from data_prep import load_raw_data, train_test_split_encoded
+from data_prep import scrape_data_from_webpage, train_test_split_encoded
 
 
 def train_ols_model(data_url: str = DATASET_URL, test_size: float = 0.2, random_state: int = 42):
@@ -21,7 +21,7 @@ def train_ols_model(data_url: str = DATASET_URL, test_size: float = 0.2, random_
     print("=" * 60)
     
     print("\n1. Loading and preparing data...")
-    df = load_raw_data(data_url)
+    df = scrape_data_from_webpage(data_url)
     X_train, X_test, y_train, y_test, feature_names = train_test_split_encoded(
         df, test_size=test_size, random_state=random_state
     )

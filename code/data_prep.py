@@ -1,22 +1,69 @@
 import os
 import io
+import time
 from typing import Tuple, Optional
 
 import numpy as np
 import pandas as pd
 import requests
+from bs4 import BeautifulSoup
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
 
-def load_raw_data(data_url: str) -> pd.DataFrame:
-    print(f"Downloading dataset from: {data_url}")
-    response = requests.get(data_url)
-    response.raise_for_status()#error if download failed
-    df = pd.read_csv(io.StringIO(response.text))#convert response to a dataframe
-    print(f"Dataset loaded successfully ({len(df)} rows)")
+def scrape_data_from_webpage(page_url: str, max_retries: int = 3, retry_delay: int = 2) -> pd.DataFrame:
+    print(f"Scraping data from webpage: {page_url}")
     
-    return df
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    
+    #convert blob to raw immediately
+    if 'github.com' in page_url and '/blob/' in page_url:
+        raw_url = page_url.replace('/blob/', '/raw/')
+        print(f"GitHub blob URL detected. Converting to raw URL: {raw_url}")
+        page_url = raw_url
+    
+    #retry logic because of rate limiting
+    for attempt in range(max_retries):
+        try:
+            response = requests.get(page_url, headers=headers)
+            
+            if response.status_code == 429:
+                wait_time = retry_delay * (2 ** attempt)
+                print(f"Rate limited (429). Waiting {wait_time} seconds before retry {attempt + 1}/{max_retries}...")
+                time.sleep(wait_time)
+                continue
+            
+            response.raise_for_status()
+            
+            #read as CSV first because of raw URLs or direct CSV files
+            try:
+                df = pd.read_csv(io.StringIO(response.text))
+                print(f"Downloaded CSV: {len(df)} rows")
+                return df
+            except:
+                #scrape tables with BeautifulSoup if not CSV
+                soup = BeautifulSoup(response.content, 'lxml')
+                tables = soup.find_all('table')
+                
+                if tables:
+                    print(f"Found {len(tables)} table(s) on the page. Using the first table.")
+                    df = pd.read_html(str(tables[0]))[0]
+                    print(f"Scraped table with {len(df)} rows and {len(df.columns)} columns")
+                    return df
+                else:
+                    raise ValueError("No tables found on the webpage and content is not a valid CSV. Please provide a direct CSV URL or a page with a table.")
+                
+        except requests.exceptions.HTTPError as e:
+            if e.response.status_code == 429 and attempt < max_retries - 1:
+                wait_time = retry_delay * (2 ** attempt)
+                print(f"Rate limited (429). Waiting {wait_time} seconds before retry {attempt + 1}/{max_retries}...")
+                time.sleep(wait_time)
+                continue
+            raise
+    
+    raise Exception(f"Failed to scrape data {max_retries} (rate limited)")
 
 
 def clean_dataset(df: pd.DataFrame, drop_outliers: bool = True) -> pd.DataFrame:
@@ -82,7 +129,7 @@ def prepare_data_for_pdf(
     
     #load and clean data
     print("1. Loading and cleaning data...")
-    df_raw = load_raw_data(data_url)
+    df_raw = scrape_data_from_webpage(data_url)
     df_clean = clean_dataset(df_raw, drop_outliers=True)
     print(f"   Cleaned dataset: {len(df_clean)} rows")
     

@@ -7,7 +7,7 @@ import seaborn as sns
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config import DATASET_URL
 
-from data_prep import load_raw_data, clean_dataset
+from data_prep import scrape_data_from_webpage, clean_dataset
 
 
 
@@ -16,7 +16,7 @@ from data_prep import load_raw_data, clean_dataset
 def basic_eda(data_url: str = DATASET_URL) -> None:
     if not os.path.exists("figures"):
         os.makedirs("figures")
-    df = clean_dataset(load_raw_data(data_url))
+    df = clean_dataset(scrape_data_from_webpage(data_url))
 
     #dist of age_at_death
     plt.figure(figsize=(6, 4))

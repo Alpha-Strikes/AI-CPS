@@ -609,7 +609,17 @@ This project predicts age at death based on lifestyle factors (work hours, rest 
 - **PyBrain Neural Network** (ANN-based) for non-linear modeling
 - **Data scraping** from a GitHub repository
 - **Docker containerization** for model deployment
-- <img width="1000" height="500" alt="projectColumnDes" src="https://github.com/user-attachments/assets/e45ec724-f632-45e8-8813-c61c662eb8d6" />
+| Column Name                 | Type    | Description                                                                                                                                                                                                  |   |
+|-----------------------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---|
+| id                          | Integer | Unique Identifier for each individual                                                                                                                                                                        |   |
+| gender                      | Text    | Gender of the Individual (Male or Female)                                                                                                                                                                    |   |
+| occupation_type             | Text    | Type of Occupation (14 categories: Healthcare Worker, Teacher, Engineer, Artist, Manuel Laborer, Office Worker, Entrepreneur, Retail Worker, Driver, Scientist, Freelancer, Manager, Technician, Consultant) |   |
+| avg_work_hours_per_day      | Float   | Average hours spent working per day (0-24 hours). Includes outliers with extremes hours up to 24 hours                                                                                                       |   |
+| avg_rest_hours_per_day      | Float   | Average hours spent resting per day (0-24 hours). Includes outliers with extreme rest hours up to 24 hours.                                                                                                  |   |
+| avg_sleep_hours_per_day     | Float   | Average hours spent sleeping per day (0-24 hours). Includes outliers with extreme sleep hours up to 24 hours.                                                                                                |   |
+| avg_excercise_hours_per_day | Float   | Average hours spent exercising per day (0-4 hours)                                                                                                                                                           |   |
+| age_at_death                | Integer | Age at which the individual died, representing longevity (25-100 years)                                                                                                                                      |   |
+
 
 
 ## Project Structure

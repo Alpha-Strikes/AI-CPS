@@ -184,6 +184,9 @@ def plot_ols_diagnostics(results: dict, output_dir: str = "figures"):
     # 4. Residual vs Leverage
     plt.figure(figsize=(8, 6))
     plt.scatter(leverage, residuals_train, alpha=0.5)
+    r_low, r_high = np.percentile(residuals_train, [2, 98])
+    r_margin = max((r_high - r_low) * 0.9, 1.0)
+    plt.ylim(r_low - r_margin, r_high + r_margin)
     plt.xlabel("Leverage")
     plt.ylabel("Residuals")
     plt.title("Residuals vs Leverage (Training Set)")
